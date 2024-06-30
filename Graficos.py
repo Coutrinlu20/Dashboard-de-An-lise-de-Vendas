@@ -87,5 +87,37 @@ fig3.add_annotation(text=f"Média : {round(df3['Chamadas Realizadas'].mean(), 2)
 )
 
 #Valores pagos por meio de propaganda
+df4 = df.groupby(['Meio de Propaganda', 'Mês'])['Valor Pago'].sum().reset_index()
+fig4 = px.line(df4,y="Valor Pago", x="Mês", color="Meio de Propaganda")
+fig4.show()
+
+# Propaganda em PieChart // talvez botar no msm card
+
+df5 = df.groupby('Meio de Propaganda')['Valor Pago'].sum().reset_index()
+fig5 = go.Figure()
+fig5.add_trace(go.Pie(labels=df5['Meio de Propaganda'], values=df5['Valor Pago'], hole=.7))
+
+# Ganhos por Mês + segregação por equipe
+
+df.columns
+df6 = df.groupby(['Mês','Equipe'])['Valor Pago'].sum().reset_index()
+df6_group = df.groupby('Mês')['Valor Pago'].sum().reset_index()
+
+fig6 = px.line(df6, y="Valor Pago", x="Mês", color="Equipe")
+fig6.add_trace(go.Scatter(y=df6_group['Valor Pago'], x=df6_group['Mês'], mode='lines+markers', fill='tonexty', fillcolor='rgba(255,0,0,0.2)',name='Total de Vendas'))
+fig6.show()
+
+# Pagos e não pagos
+
+df7 =df.groupby('Status de Pagamento')['Chamadas Realizadas'].sum()
+fig7 = go.Figure()
+fig7.add_trace(go.Pie(labels=['Não Pago', 'Pago'], values=df7, hole=.6))
+fig7.show()
+
+# INDICATORS
+
+df8 = df.groupby(['Consultor', 'Equipe'])['Valor Pago'].sum()
+df8.sort_values(ascending=False, inplace=True)
+df8 = df8.reset_index()
 
 
